@@ -1,14 +1,35 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./Contact.css";
 import { MdOutlineEmail } from "react-icons/md";
 import { BiLogoMessenger } from "react-icons/bi";
 import { FaLinkedin } from "react-icons/fa";
+import emailjs from "@emailjs/browser";
 
 const Contact = () => {
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm("service_plxumr8", "template_dru02sd", form.current, {
+        publicKey: "rq7ROozKtNGeH6Ihq",
+      })
+      .then(
+        () => {
+          console.log("SUCCESS!");
+        },
+        (error) => {
+          console.log("FAILED...", error.text);
+        }
+      );
+    e.target.reset();
+  };
+
   return (
     <section id="contact">
       <h5>Get In Touch</h5>
-      <h2>COntact Me</h2>
+      <h2>Contact Me</h2>
 
       <div className="container contact_conatiner">
         <div className="contact_options">
@@ -35,19 +56,14 @@ const Contact = () => {
             <a href="https://linkedin.com/in/quentinkinard">Send a Message</a>
           </article>
         </div>
-        <form action="">
+        <form ref={form} onSubmit={sendEmail}>
           <input
             type="text"
             name="name"
             placeholder="Your Full Name"
             required
           />
-          <input
-            type="email"
-            name="email"
-            placeholder="Your Full Name"
-            required
-          />
+          <input type="email" name="email" placeholder="Your Email" required />
           <textarea
             name="message"
             rows={7}
